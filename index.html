@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#d9cbb6">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect fill='%231f7a6a' width='32' height='32' rx='8'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23e8b03a'/%3E%3C/svg%3E">
+  <title>Bite Point — a first-gear game (not a driving lesson)</title>
+  <style>
+    :root {
+      --paper: #e9dfcf;
+      --paper-deep: #d9cbb6;
+      --ink: #1c1916;
+      --ink-soft: #5c5348;
+      --panel: #2b2f33;
+      --panel-2: #23272b;
+      --cream: #f6f0e6;
+      --gold: #e8b03a;
+      --gold-deep: #c48914;
+      --teal: #1f7a6a;
+      --teal-deep: #155e52;
+      --stall: #c44536;
+      --rough: #d97706;
+      --smooth: #1f8a5b;
+      --asphalt: #5c6168;
+      --zone-top: 28%;
+      --zone-height: 34%;
+      --clutch: 1;
+      --gas: 0;
+      --safe-b: env(safe-area-inset-bottom, 0px);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      min-height: 100%;
+      background:
+        radial-gradient(1200px 500px at 50% -10%, #f4ebe0 0%, transparent 60%),
+        linear-gradient(180deg, #efe4d3 0%, var(--paper) 40%, var(--paper-deep) 100%);
+      color: var(--ink);
+      font-family: system-ui, "Segoe UI", "Trebuchet MS", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior: none;
+    }
+    body { padding: 12px 12px calc(16px + var(--safe-b)); }
+    button, .pedal { touch-action: none; }
+    .app {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px 16px;
+      align-items: start;
+      margin-bottom: 10px;
+    }
+    .brand h1 {
+      font-size: 1.7rem;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+    .brand h1 span {
+      color: var(--gold-deep);
+    }
+    .tag {
+      margin-top: 4px;
+      font-weight: 700;
+      color: var(--teal-deep);
+      font-size: 0.92rem;
+    }
+    .disclaimer {
+      grid-column: 1 / -1;
+      background: #fff7ea;
+      border: 1px solid #e4d2b0;
+      color: #4a3f30;
+      font-size: 0.8rem;
+      line-height: 1.35;
+      padding: 8px 10px;
+      border-radius: 10px;
+    }
+    .stats {
+      display: flex;
+      gap: 10px;
+      justify-self: end;
+    }
+    .stat {
+      background: #fffaf3;
+      border: 1px solid #e3d5be;
+      border-radius: 10px;
+      padding: 6px 10px;
+      min-width: 92px;
+      text-align: center;
+    }
+    .stat b { display: block; font-size: 1.15rem; color: var(--teal-deep); }
+    .stat span { font-size: 0.72rem; color: var(--ink-soft); letter-spacing: 0.02em; }
+
+    .stage {
+      position: relative;
+      background: var(--panel);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(60, 40, 20, 0.15);
+    }
+    #scene {
+      display: block;
+      width: 100%;
+      height: 240px;
+      background: #8eaab8;
+    }
+    .instruments {
+      display: grid;
+      grid-template-columns: 170px 1fr 180px;
+      gap: 8px;
+      align-items: stretch;
+      background: var(--panel-2);
+      padding: 10px 12px 12px;
+      color: var(--cream);
+    }
+    .tach-card, .clutch-card {
+      background: #1a1d21;
+      border-radius: 14px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .card-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #b9b1a5;
+      margin-bottom: 2px;
+    }
+    #tach { width: 150px; height: 150px; display: block; }
+    .clutch-card { padding: 8px 10px 10px; }
+    .cz {
+      position: relative;
+      width: 100%;
+      height: 150px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #2a2f34 0%, #22262b 100%);
+      border: 1px solid #3a4148;
+      overflow: hidden;
+    }
+    .cz-top, .cz-bot {
+      position: absolute;
+      left: 8px;
+      font-size: 0.64rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #9aa1a8;
+      z-index: 2;
+    }
+    .cz-top { top: 6px; }
+    .cz-bot { bottom: 6px; }
+    .cz-zone {
+      position: absolute;
+      left: 0; right: 0;
+      top: var(--zone-top);
+      height: var(--zone-height);
+      background: rgba(232, 176, 58, 0.18);
+      border-top: 1px solid rgba(232, 176, 58, 0.55);
+      border-bottom: 1px solid rgba(232, 176, 58, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+    .cz-zone span {
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: #f3d48a;
+    }
+    .cz.in-zone .cz-zone {
+      background: rgba(232, 176, 58, 0.42);
+      box-shadow: inset 0 0 18px rgba(232, 176, 58, 0.35);
+    }
+    .cz.in-zone .cz-zone span { color: #fff4cc; }
+    .cz-marker {
+      position: absolute;
+      left: 10px; right: 10px;
+      height: 8px;
+      margin-top: -4px;
+      top: calc(var(--clutch) * 100%);
+      background: #f2f0ea;
+      border-radius: 99px;
+      box-shadow: 0 0 0 2px #111, 0 0 10px rgba(255,255,255,0.15);
+      z-index: 3;
+    }
+    .cz-marker::after {
+      content: "";
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 6px solid transparent;
+      border-left-color: #f2f0ea;
+    }
+    .bite-lamp {
+      margin-top: 6px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      color: #5a5348;
+      background: #14171a;
+      border-radius: 99px;
+      padding: 3px 10px;
+    }
+    .bite-lamp.on {
+      color: #1a1204;
+      background: var(--gold);
+      box-shadow: 0 0 12px rgba(232, 176, 58, 0.7);
+    }
+    .center-readouts {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 4px 4px 0;
+    }
+    .readout-row {
+      display: flex;
+      gap: 8px;
+    }
+    .readout {
+      flex: 1;
+      background: #1a1d21;
+      border-radius: 12px;
+      padding: 8px 10px;
+      text-align: center;
+    }
+    .readout .v {
+      font-variant-numeric: tabular-nums;
+      font-size: 1.55rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .readout .u {
+      display: block;
+      margin-top: 3px;
+      font-size: 0.66rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #9aa1a8;
+    }
+    .coach {
+      flex: 1;
+      background: #1a1d21;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.92rem;
+      line-height: 1.35;
+      color: #f0e7d8;
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+    }
+
+    .result {
+      display: none;
+      background: #16181c;
+      color: #fff;
+      padding: 12px 16px 14px;
+      border-top: 1px solid #2c3238;
+    }
+    .result.show { display: block; }
+    .result .kind {
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    .result.stall .kind { color: #ff8d82; }
+    .result.rough .kind { color: #ffc56b; }
+    .result.smooth .kind { color: #7dffc0; }
+    .stars { color: var(--gold); letter-spacing: 0.15em; margin: 4px 0 6px; font-size: 1.15rem; }
+    .result .tip { color: #f0e7d8; font-size: 0.95rem; line-height: 1.4; }
+    .result .score { margin-top: 4px; color: #c9c0b3; font-size: 0.8rem; }
+    .result .actions { margin-top: 10px; display: flex; gap: 8px; }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 180px 1fr;
+      gap: 12px;
+      margin-top: 12px;
+      align-items: stretch;
+    }
+    .pedal {
+      user-select: none;
+      background: #fffaf3;
+      border: 1px solid #e3d5be;
+      border-radius: 16px;
+      padding: 10px 10px 8px;
+      cursor: ns-resize;
+      box-shadow: 0 2px 0 #e3d5be;
+    }
+    .pedal h2 {
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-align: center;
+      color: var(--ink-soft);
+      margin-bottom: 6px;
+    }
+    .pedal-track {
+      position: relative;
+      height: 180px;
+      border-radius: 14px;
+      background: #ece4d6;
+      border: 1px solid #d7cbB6;
+      overflow: hidden;
+    }
+    .clutch-pedal .pedal-track {
+      background:
+        linear-gradient(180deg, transparent 0, transparent var(--zone-top), rgba(232,176,58,0.35) var(--zone-top), rgba(232,176,58,0.35) calc(var(--zone-top) + var(--zone-height)), transparent calc(var(--zone-top) + var(--zone-height)));
+    }
+    .pedal-fill {
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      height: calc(22px + var(--clutch) * (100% - 44px));
+      background: linear-gradient(180deg, #7aa8a0, #3d6f68);
+      opacity: 0.55;
+      pointer-events: none;
+    }
+    .gas-pedal .pedal-fill {
+      height: calc(22px + var(--gas) * (100% - 44px));
+      background: linear-gradient(180deg, #e8a078, #b85a3d);
+    }
+    .pedal-handle {
+      position: absolute;
+      left: 8px; right: 8px;
+      height: 44px;
+      top: calc(var(--clutch) * (100% - 44px));
+      background: #f7f3ec;
+      border: 2px solid #2b2f33;
+      border-radius: 12px;
+      box-shadow: 0 4px 0 #c9bba6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      font-size: 0.72rem;
+      color: #2b2f33;
+      z-index: 2;
+    }
+    .gas-pedal .pedal-handle { top: calc(var(--gas) * (100% - 44px)); }
+    .pedal .hint {
+      text-align: center;
+      margin-top: 6px;
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+    }
+    .center-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+    }
+    .gears {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .btn {
+      appearance: none;
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      background: #2b2f33;
+      color: #f6f0e6;
+    }
+    .btn:hover { filter: brightness(1.08); }
+    .btn.active { background: var(--teal); color: white; }
+    .btn.start { background: var(--teal); width: 100%; padding: 14px 12px; font-size: 0.95rem; }
+    .btn.start:disabled { background: #8a918c; cursor: not-allowed; filter: none; }
+    .btn.ghost { background: #efe7da; color: var(--ink); border: 1px solid #d7cbB6; }
+    .btn.wide { grid-column: 1 / -1; }
+    .keys {
+      margin-top: 10px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+    kbd {
+      display: inline-block;
+      background: #fff;
+      border: 1px solid #d7cbB6;
+      border-bottom-width: 2px;
+      border-radius: 5px;
+      padding: 0 5px;
+      font-size: 0.76rem;
+      font-family: inherit;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 25, 22, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      padding: 16px;
+    }
+    .modal.show { display: flex; }
+    .sheet {
+      background: #fffaf3;
+      max-width: 520px;
+      width: 100%;
+      border-radius: 18px;
+      padding: 22px 22px 18px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    }
+    .sheet h2 { font-size: 1.35rem; margin-bottom: 6px; }
+    .sheet .note {
+      color: var(--teal-deep);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .sheet ol { padding-left: 1.15rem; color: #3b342b; }
+    .sheet li { margin: 0 0 8px; line-height: 1.4; }
+    .sheet .btn { margin-top: 8px; width: 100%; background: var(--teal); }
+
+    @media (max-width: 760px) {
+      header { grid-template-columns: 1fr; }
+      .stats { justify-self: start; }
+      #scene { height: 190px; }
+      .instruments { grid-template-columns: 1fr 1fr; }
+      .center-readouts { grid-column: 1 / -1; }
+      #tach { width: 132px; height: 132px; }
+      .cz { height: 132px; }
+      .controls { grid-template-columns: 1fr 1fr; }
+      .center-controls { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; }
+      .gears { flex: 1; }
+      .btn.start { width: auto; flex: 1; }
+      .pedal-track { height: 210px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <h1>Bite <span>Point</span></h1>
+        <p class="tag">A game, not a driving lesson</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><b id="statAttempts">0</b><span>attempts</span></div>
+        <div class="stat"><b id="statClean">0</b><span>clean launches</span></div>
+      </div>
+      <p class="disclaimer">
+        This is a game, not driver’s education, and it is not enough preparation to drive a real manual car.
+        Do not use it while driving. Pedal feel on a screen is not the same as a real clutch.
+      </p>
+    </header>
+
+    <section class="stage" aria-label="Game stage">
+      <canvas id="scene" width="980" height="240"></canvas>
+      <div class="result" id="result">
+        <div class="kind" id="resultKind">STALL</div>
+        <div class="stars" id="resultStars"></div>
+        <div class="tip" id="resultTip"></div>
+        <div class="score" id="resultScore"></div>
+        <div class="actions">
+          <button class="btn" id="btnRetry" type="button">Try again</button>
+        </div>
+      </div>
+      <div class="instruments">
+        <div class="tach-card">
+          <div class="card-label">Tachometer</div>
+          <canvas id="tach" width="150" height="150"></canvas>
+        </div>
+        <div class="center-readouts">
+          <div class="readout-row">
+            <div class="readout"><span class="v" id="speedRead">0</span><span class="u">mph</span></div>
+            <div class="readout"><span class="v" id="gearRead">1</span><span class="u">gear</span></div>
+          </div>
+          <div class="coach" id="coach">Press the clutch in and start the engine.</div>
+        </div>
+        <div class="clutch-card">
+          <div class="card-label">Clutch travel</div>
+          <div class="cz" id="clutchGauge">
+            <div class="cz-top">Up · engaged</div>
+            <div class="cz-zone"><span>FRICTION ZONE</span></div>
+            <div class="cz-bot">Down · disengaged</div>
+            <div class="cz-marker" id="clutchMarker"></div>
+          </div>
+          <div class="bite-lamp" id="biteLamp">BITE</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="controls">
+      <div class="pedal clutch-pedal" id="clutchPedal" role="slider" aria-label="Clutch pedal" aria-valuemin="0" aria-valuemax="100">
+        <h2>Clutch</h2>
+        <div class="pedal-track">
+          <div class="pedal-fill"></div>
+          <div class="pedal-handle">CLUTCH</div>
+        </div>
+        <div class="hint">Drag · <kbd>Z</kbd> down · <kbd>X</kbd> up · <kbd>C</kbd> feather</div>
+      </div>
+      <div class="center-controls">
+        <div class="gears" role="group" aria-label="Gear selector">
+          <button class="btn" id="gearN" type="button">N</button>
+          <button class="btn" id="gear1" type="button">1st</button>
+          <button class="btn" id="gear2" type="button">2nd</button>
+          <button class="btn" id="gear3" type="button">3rd</button>
+        </div>
+        <button class="btn start" id="btnStart" type="button">Start engine</button>
+        <button class="btn ghost" id="btnHelp" type="button">How to play</button>
+      </div>
+      <div class="pedal gas-pedal" id="gasPedal" role="slider" aria-label="Gas pedal" aria-valuemin="0" aria-valuemax="100">
+        <h2>Gas</h2>
+        <div class="pedal-track">
+          <div class="pedal-fill"></div>
+          <div class="pedal-handle">GAS</div>
+        </div>
+        <div class="hint">Drag · <kbd>W</kbd> more · <kbd>S</kbd> less</div>
+      </div>
+    </section>
+
+    <p class="keys">
+      Hold <kbd>Z</kbd> or <kbd>Shift</kbd> to press the clutch, <kbd>X</kbd> to let it out quickly, <kbd>C</kbd> to let it out slowly.
+      <kbd>W</kbd>/<kbd>S</kbd> set the gas (it stays where you leave it).
+      <kbd>R</kbd> starts the engine (clutch in if you’re in gear).
+      <kbd>N</kbd> <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> shift — clutch in first.
+    </p>
+  </div>
+
+  <div class="modal show" id="helpModal" role="dialog" aria-labelledby="helpTitle">
+    <div class="sheet">
+      <h2 id="helpTitle">Find the bite point</h2>
+      <p class="note">A first-gear game — not a driving lesson, and not for use while driving.</p>
+      <ol>
+        <li>Press the <b>clutch</b> all the way down (left pedal or <kbd>Z</kbd>) and hit <b>Start engine</b>.</li>
+        <li>Add a little <b>gas</b> so the tach sits in the green band, around 2,000 rpm.</li>
+        <li>Let the clutch <b>up slowly</b>. When the marker enters the gold <b>friction zone</b>, the engine takes the load — that’s the bite.</li>
+        <li>Keep a little gas and finish letting the clutch out as you roll. Dumping it, or giving it no gas, will stall. Too much gas burns the clutch.</li>
+      </ol>
+      <p style="margin: 8px 0 12px; color: #5c5348; font-size: 0.88rem;">Optional stretch: once you’re rolling, clutch in and shift to 2nd, then 3rd.</p>
+      <button class="btn" id="btnLetsGo" type="button">Let’s go</button>
+    </div>
+  </div>
+
+  <script>
+  (() => {
+    const STORAGE_KEY = "bite-point-stats";
+
+    const CFG = {
+      idle: 850,
+      stallRpm: 500,
+      redline: 6500,
+      biteStart: 0.62,
+      lockPoint: 0.28,
+      iEng: 0.12,
+      maxEngineTorque: 175,
+      maxClutchTorque: 220,
+      idleGov: 0.14,
+      engineDrag: 0.010,
+      mass: 14,
+      ratios: [0, 350, 195, 122],
+      driveMul: [0, 0.42, 0.28, 0.19],
+      viscous: 1.05,
+      aero: 0.02,
+      roll: 0.55,
+      stallTime: 0.15,
+      clutchDownRate: 3.4,
+      clutchUpFast: 2.5,
+      clutchUpFeather: 0.28,
+      gasRate: 1.55,
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const els = {
+      scene: $("scene"),
+      tach: $("tach"),
+      clutchGauge: $("clutchGauge"),
+      biteLamp: $("biteLamp"),
+      speedRead: $("speedRead"),
+      gearRead: $("gearRead"),
+      coach: $("coach"),
+      result: $("result"),
+      resultKind: $("resultKind"),
+      resultStars: $("resultStars"),
+      resultTip: $("resultTip"),
+      resultScore: $("resultScore"),
+      btnRetry: $("btnRetry"),
+      btnStart: $("btnStart"),
+      btnHelp: $("btnHelp"),
+      btnLetsGo: $("btnLetsGo"),
+      helpModal: $("helpModal"),
+      clutchPedal: $("clutchPedal"),
+      gasPedal: $("gasPedal"),
+      statAttempts: $("statAttempts"),
+      statClean: $("statClean"),
+      gearBtns: { 0: $("gearN"), 1: $("gear1"), 2: $("gear2"), 3: $("gear3") },
+    };
+
+    const root = document.documentElement;
+    root.style.setProperty("--zone-top", (CFG.lockPoint * 100) + "%");
+    root.style.setProperty("--zone-height", ((CFG.biteStart - CFG.lockPoint) * 100) + "%");
+
+    const stats = loadStats();
+    const keys = new Set();
+    const particles = [];
+
+    const state = {
+      clutch: 1,
+      throttle: 0,
+      rpm: 0,
+      displayRpm: 0,
+      speed: 0,
+      gear: 1,
+      running: false,
+      stalled: false,
+      engagement: 0,
+      drivenRpm: 0,
+      slip: 0,
+      pos: 0,
+      stallTimer: 0,
+      lockTimer: 0,
+      wheelAngle: 0,
+      shake: 0,
+      squat: 0,
+      coach: "Press the clutch in and start the engine.",
+      attempt: null,
+      result: null,
+      grindFlash: 0,
+      lastT: 0,
+      acc: 0,
+    };
+
+    function loadStats() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const d = JSON.parse(raw);
+          return {
+            attempts: Number(d.attempts) || 0,
+            cleanLaunches: Number(d.cleanLaunches) || 0,
+          };
+        }
+      } catch (e) {}
+      return { attempts: 0, cleanLaunches: 0 };
+    }
+    function saveStats() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
+      } catch (e) {}
+      els.statAttempts.textContent = String(stats.attempts);
+      els.statClean.textContent = String(stats.cleanLaunches);
+    }
+    saveStats();
+
+    function engagementOf(pedal) {
+      if (pedal >= CFG.biteStart) return 0;
+      if (pedal <= CFG.lockPoint) return 1;
+      const x = (CFG.biteStart - pedal) / (CFG.biteStart - CFG.lockPoint);
+      return x * x * (3 - 2 * x);
+    }
+
+    function engineTorque(rpm, thr, running) {
+      if (!running) return 0;
+      const drag = rpm * CFG.engineDrag;
+      const idleHold = CFG.idle * CFG.engineDrag;
+      const govScale = Math.max(0, 1 - thr * 2);
+      const gov = (CFG.idle - rpm) * CFG.idleGov * govScale + idleHold * govScale;
+      const t = rpm / CFG.redline;
+      const curve = Math.max(0.2, Math.sin(Math.PI * Math.min(1.02, t * 1.02)));
+      const low = rpm < 600 ? Math.max(0, rpm / 600) : 1;
+      let comb = thr * CFG.maxEngineTorque * curve * low;
+      if (rpm >= CFG.redline) comb *= Math.max(0, 1 - (rpm - CFG.redline) / 200);
+      return gov + comb - drag;
+    }
+
+    function clutchTorque(eng, slip) {
+      const capacity = eng * CFG.maxClutchTorque;
+      let tq = slip * CFG.viscous;
+      if (tq > capacity) tq = capacity;
+      if (tq < -capacity) tq = -capacity;
+      return tq;
+    }
+
+    const audio = { ok: false, ctx: null };
+
+    function setupAudio() {
+      if (audio.ok || audio.failed) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const filter = ctx.createBiquadFilter();
+        const gain = ctx.createGain();
+        const gain2 = ctx.createGain();
+        const lfo = ctx.createOscillator();
+        const lfoGain = ctx.createGain();
+        const noiseGain = ctx.createGain();
+
+        osc.type = "sawtooth";
+        osc2.type = "triangle";
+        osc.frequency.value = 80;
+        osc2.frequency.value = 81;
+        filter.type = "lowpass";
+        filter.frequency.value = 700;
+        filter.Q.value = 0.7;
+        gain.gain.value = 0;
+        gain2.gain.value = 0.35;
+        lfo.type = "sine";
+        lfo.frequency.value = 8;
+        lfoGain.gain.value = 0;
+        noiseGain.gain.value = 0;
+
+        const nLen = Math.floor(ctx.sampleRate * 1.5);
+        const buf = ctx.createBuffer(1, nLen, ctx.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i = 0; i < nLen; i++) data[i] = Math.random() * 2 - 1;
+        const noise = ctx.createBufferSource();
+        noise.buffer = buf;
+        noise.loop = true;
+
+        lfo.connect(lfoGain);
+        lfoGain.connect(gain.gain);
+        osc.connect(filter);
+        osc2.connect(gain2);
+        gain2.connect(filter);
+        noise.connect(noiseGain);
+        noiseGain.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc2.start();
+        lfo.start();
+        noise.start();
+
+        audio.ok = true;
+        audio.ctx = ctx;
+        audio.osc = osc;
+        audio.osc2 = osc2;
+        audio.filter = filter;
+        audio.gain = gain;
+        audio.lfo = lfo;
+        audio.lfoGain = lfoGain;
+        audio.noiseGain = noiseGain;
+        if (ctx.state === "suspended") ctx.resume();
+      } catch (e) {
+        audio.failed = true;
+      }
+    }
+
+    function updateAudio() {
+      if (!audio.ok) return;
+      if (audio.ctx.state === "suspended") audio.ctx.resume().catch(() => {});
+      const t = audio.ctx.currentTime;
+      const running = state.running && !state.stalled;
+      const slipLoad = Math.abs(state.slip) * state.engagement;
+      const g = running ? (0.028 + state.throttle * 0.05 + (state.rpm / 6500) * 0.03) : 0;
+      audio.gain.gain.setTargetAtTime(g, t, 0.05);
+      const f = running ? (68 + state.rpm * 0.074) : 20;
+      audio.osc.frequency.setTargetAtTime(f, t, 0.03);
+      audio.osc2.frequency.setTargetAtTime(f * 2.01, t, 0.03);
+      audio.filter.frequency.setTargetAtTime(380 + state.rpm * 0.35 + state.throttle * 900, t, 0.05);
+      const judder = running && state.engagement > 0.08 && state.engagement < 0.95 && slipLoad > 200;
+      audio.lfo.frequency.setTargetAtTime(judder ? 18 : 7, t, 0.08);
+      audio.lfoGain.gain.setTargetAtTime(judder ? 0.012 : (running ? 0.003 : 0), t, 0.08);
+      audio.noiseGain.gain.setTargetAtTime(running ? (0.015 + state.throttle * 0.03) : 0, t, 0.08);
+    }
+
+    function inBite() {
+      return state.clutch < CFG.biteStart && state.clutch > CFG.lockPoint;
+    }
+
+    function startEngine() {
+      setupAudio();
+      if (state.running) return { ok: true, already: true };
+      if (state.gear !== 0 && state.clutch < 0.72) {
+        setCoach("Clutch in all the way to start when you’re in gear.");
+        return { ok: false, reason: "clutch" };
+      }
+      state.running = true;
+      state.stalled = false;
+      state.rpm = CFG.idle;
+      state.displayRpm = CFG.idle;
+      state.stallTimer = 0;
+      if (state.result && state.result.kind === "STALL") clearResult(false);
+      setCoach("Engine’s running. Add a little gas, then let the clutch up slowly.");
+      return { ok: true };
+    }
+
+    function stall(reason) {
+      if (!state.running) return;
+      state.running = false;
+      state.stalled = true;
+      state.rpm = 0;
+      state.shake = 8;
+      burst(22, "stall");
+      const tip = reason || stallTip();
+      finishAttempt("STALL", tip, 0, 0);
+      setCoach("Stalled. Clutch in and start the engine to try again.");
+    }
+
+    function stallTip() {
+      const a = state.attempt;
+      const dumped = a && (a.maxUpRate > 1.2 || (a.zoneTime > 0 && a.zoneTime < 0.45) || a.t < 0.45);
+      if (dumped) {
+        return "You let the clutch out too fast. Feather it through the gold friction zone.";
+      }
+      if (!a || a.maxThrottle < 0.18) {
+        return "Not enough gas as the clutch started to bite. Add a little throttle, then let it out slowly.";
+      }
+      return "The engine bogged under the load. Give it a bit more gas and release the clutch more slowly.";
+    }
+
+    function setCoach(text) {
+      state.coach = text;
+      els.coach.textContent = text;
+    }
+
+    function changeGear(next) {
+      if (next === state.gear) return;
+      if (state.clutch < 0.7) {
+        state.grindFlash = 0.35;
+        setCoach("Clutch in before you shift, or you’ll grind the gears.");
+        burst(8, "grind");
+        return;
+      }
+      state.gear = next;
+      updateGearButtons();
+      const labels = ["N", "1st", "2nd", "3rd"];
+      els.gearRead.textContent = labels[next];
+      if (state.running && !state.result) {
+        if (next === 0) setCoach("Neutral. Choose 1st for a standing start.");
+        else if (next === 1) setCoach("First gear. Add a little gas and find the bite.");
+        else setCoach("In " + labels[next] + ". Match the revs and let the clutch out smoothly.");
+      }
+    }
+
+    function updateGearButtons() {
+      for (const [g, btn] of Object.entries(els.gearBtns)) {
+        btn.classList.toggle("active", Number(g) === state.gear);
+      }
+    }
+
+    function beginAttempt() {
+      state.attempt = {
+        active: true,
+        t: 0,
+        enteredZoneAt: null,
+        zoneTime: 0,
+        minRpm: state.rpm,
+        maxRpm: state.rpm,
+        maxUpRate: 0,
+        maxThrottle: state.throttle,
+        heat: 0,
+        maxAccel: 0,
+        lastSpeed: state.speed,
+        bog: false,
+        burnTime: 0,
+        startRpm: state.rpm,
+      };
+    }
+
+    function finishAttempt(kind, tip, stars, score) {
+      if (state.result) return;
+      const a = state.attempt;
+      if (a && a.active) a.active = false;
+      state.result = { kind, tip, stars, score };
+      stats.attempts += 1;
+      if (kind === "SMOOTH LAUNCH") stats.cleanLaunches += 1;
+      saveStats();
+      showResult(kind, tip, stars, score);
+    }
+
+    function showResult(kind, tip, stars, score) {
+      const box = els.result;
+      box.className = "result show " + (kind === "SMOOTH LAUNCH" ? "smooth" : kind === "STALL" ? "stall" : "rough");
+      els.resultKind.textContent = kind;
+      els.resultStars.textContent = stars ? "★".repeat(stars) + "☆".repeat(3 - stars) : "☆☆☆";
+      els.resultTip.textContent = tip;
+      els.resultScore.textContent = kind === "STALL" ? "Score 0 · car needs a restart" : ("Score " + score + " / 100");
+    }
+
+    function clearResult(resetCar) {
+      state.result = null;
+      els.result.className = "result";
+      if (resetCar) resetToStart();
+    }
+
+    function resetToStart() {
+      state.speed = 0;
+      state.pos = 0;
+      state.rpm = state.running ? CFG.idle : 0;
+      state.displayRpm = state.rpm;
+      state.stalled = false;
+      state.throttle = 0;
+      state.stallTimer = 0;
+      state.lockTimer = 0;
+      state.attempt = null;
+      state.shake = 0;
+      state.squat = 0;
+      if (!state.running) {
+        setCoach("Press the clutch in and start the engine.");
+      } else if (state.clutch < 0.72 && state.gear !== 0) {
+        setCoach("Clutch in so you don’t stall, or start from the pedals set to go.");
+      } else {
+        setCoach("Ready. Add a little gas, then let the clutch up slowly.");
+      }
+    }
+
+    function evaluateLaunch() {
+      const a = state.attempt;
+      if (!a) {
+        finishAttempt("ROUGH", "You got rolling, but the launch was hard to score. Try a cleaner first-gear pull-away.", 1, 40);
+        return;
+      }
+      let score = 100;
+      const dumped = a.maxUpRate > 1.55 || (a.zoneTime > 0 && a.zoneTime < 0.38);
+      const burned = a.burnTime > 0.55 || (a.maxRpm > 3800 && a.heat > 900);
+      const highRev = a.maxRpm > 3400;
+      const bogged = a.bog || a.minRpm < 850;
+      const rpmSweet = a.minRpm >= 1150 && a.maxRpm <= 2800;
+      const zoneNice = a.zoneTime >= 0.65 && a.zoneTime <= 3.0;
+
+      if (dumped) score -= 45;
+      if (burned) score -= 40;
+      if (highRev && !burned) score -= 18;
+      if (bogged) score -= 28;
+      if (a.maxAccel > 11) score -= 15;
+      if (a.heat > 1600) score -= 15;
+      if (a.zoneTime > 0 && a.zoneTime < 0.65) score -= 15;
+      if (a.zoneTime > 3.4) score -= 12;
+      if (!rpmSweet) score -= 8;
+      score = Math.max(5, Math.min(100, Math.round(score)));
+
+      const isSmooth = !dumped && !burned && !bogged && zoneNice
+        && a.minRpm >= 1000 && a.maxRpm <= 3600 && score >= 68;
+      if (isSmooth) {
+        const stars = (rpmSweet && a.maxUpRate < 0.7 && score >= 80) ? 3 : 2;
+        const tip = stars === 3
+          ? "Nice! You held the bite and added just enough gas for a clean first-gear pull-away."
+          : "Smooth launch. A little closer to 2,000 rpm in the gold zone and that would be textbook.";
+        finishAttempt("SMOOTH LAUNCH", tip, stars, Math.max(score, stars === 3 ? 85 : 70));
+        setCoach("Smooth launch. Keep rolling and try 2nd, or hit Try again.");
+        return;
+      }
+
+      let tip;
+      if (dumped) tip = "Rough launch — you dumped the clutch. Let it out more slowly through the highlighted friction zone.";
+      else if (burned || (highRev && a.heat > 700)) tip = "Too much gas. You got moving, but you were burning the clutch. Ease the throttle toward the green band on the tach.";
+      else if (bogged) tip = "You almost stalled. The engine bogged because there wasn’t quite enough gas as the clutch bit.";
+      else if (a.zoneTime > 3.4) tip = "You rode the clutch a bit long. Once the car is rolling, finish letting it out.";
+      else tip = "Jerky launch. Move the clutch smoothly through the gold zone and keep the tach near 2,000 rpm.";
+      const stars = score >= 55 ? 2 : 1;
+      finishAttempt("ROUGH", tip, stars, score);
+      setCoach("Rough launch. Read the tip, then try again for a smoother pull-away.");
+    }
+
+    function stepPhysics(dt, clutchRateHint) {
+      const prevClutch = state._lastClutch != null ? state._lastClutch : state.clutch;
+      const upRate = Math.max(0, (prevClutch - state.clutch) / Math.max(dt, 0.0001));
+      state._lastClutch = state.clutch;
+      state.engagement = engagementOf(state.clutch);
+      const driven = state.gear === 0 ? 0 : state.speed * CFG.ratios[state.gear];
+      state.drivenRpm = driven;
+      state.slip = state.rpm - driven;
+      const cTq = clutchTorque(state.engagement, state.slip);
+      const eTq = engineTorque(state.rpm, state.throttle, state.running && !state.stalled);
+
+      // Unloaded, the engine should free-rev quickly toward a throttle target.
+      // Once the clutch bites, that assist fades and clutch load can stall it.
+      const shaped = Math.pow(Math.max(0, state.throttle), 1.6);
+      const target = CFG.idle + shaped * (CFG.redline - CFG.idle);
+      const freeBlend = Math.max(0, 1 - state.engagement * 4);
+      if (state.running && !state.stalled) {
+        state.rpm += (target - state.rpm) * 6.2 * freeBlend * dt;
+      }
+      state.rpm += (eTq - cTq) / CFG.iEng * dt;
+      if (state.rpm < 0) state.rpm = 0;
+      if (state.rpm > CFG.redline + 400) state.rpm = CFG.redline + 400;
+
+      // A dumped clutch still hammers the engine, but a lot of that shock
+      // never makes it into useful drive (the teaching reason a dump stalls).
+      const lastEng = state._lastEng || 0;
+      const dEng = Math.max(0, state.engagement - lastEng) / Math.max(dt, 0.0001);
+      state._lastEng = state.engagement;
+      const slam = Math.max(0, Math.min(1, (dEng - 1.0) / 5));
+      const driveEff = 1 - 0.85 * slam;
+
+      if (state.gear !== 0) {
+        const force = cTq * CFG.driveMul[state.gear] * driveEff;
+        const drag = CFG.roll + CFG.aero * state.speed * state.speed;
+        const a = (force - drag) / CFG.mass;
+        state.speed += a * dt;
+        if (state.speed < 0) state.speed = 0;
+        if (state.speed > 90) state.speed = 90;
+        state.squat += ((Math.max(-1.5, Math.min(2.2, a * 0.12))) - state.squat) * Math.min(1, 10 * dt);
+      } else {
+        const drag = CFG.roll + CFG.aero * state.speed * state.speed;
+        state.speed = Math.max(0, state.speed - (drag / CFG.mass) * dt);
+        state.squat += (0 - state.squat) * Math.min(1, 8 * dt);
+      }
+
+      state.pos += state.speed * dt * 11;
+      state.wheelAngle += state.speed * dt * 1.8;
+
+      const judder = state.running && state.engagement > 0.08 && state.engagement < 0.95 && Math.abs(state.slip) > 250 && state.speed < 10;
+      const targetShake = state.stalled ? 0 : (judder ? (1.6 + Math.min(2, Math.abs(state.slip) / 800)) : 0);
+      state.shake += (targetShake - state.shake) * Math.min(1, 12 * dt);
+      if (state.grindFlash > 0) state.grindFlash -= dt;
+
+      if (state.running) {
+        if (state.rpm < CFG.stallRpm) {
+          state.stallTimer += dt;
+          if (state.stallTimer > CFG.stallTime) stall();
+        } else {
+          state.stallTimer = Math.max(0, state.stallTimer - dt * 2);
+        }
+      }
+
+      // attempts
+      if (state.running && !state.result && state.gear !== 0) {
+        const entering = state.engagement > 0.08 && state.speed < 2.2;
+        if (!state.attempt && entering) beginAttempt();
+        if (state.attempt && state.attempt.active && state.engagement < 0.04 && state.speed < 0.5) {
+          state.attempt = null; // backed out of the bite before rolling
+        }
+        const a = state.attempt;
+        if (a && a.active) {
+          a.t += dt;
+          a.minRpm = Math.min(a.minRpm, state.rpm);
+          a.maxRpm = Math.max(a.maxRpm, state.rpm);
+          a.maxThrottle = Math.max(a.maxThrottle, state.throttle);
+          a.maxUpRate = Math.max(a.maxUpRate, upRate);
+          const accel = (state.speed - a.lastSpeed) / Math.max(dt, 0.0001);
+          a.maxAccel = Math.max(a.maxAccel, accel);
+          a.lastSpeed = state.speed;
+          if (inBite()) {
+            if (a.enteredZoneAt == null) a.enteredZoneAt = a.t;
+            a.zoneTime += dt;
+          }
+          a.heat += Math.abs(state.slip) * state.engagement * dt;
+          if (state.rpm < 900 && state.engagement > 0.2) a.bog = true;
+          if (state.rpm > 3400 && state.engagement > 0.12 && state.engagement < 0.97 && Math.abs(state.slip) > 700) {
+            a.burnTime += dt;
+            if (Math.random() < 0.4) burst(1, "burn");
+          }
+          if (state.engagement > 0.95 && Math.abs(state.slip) < 380 && state.speed > 2.0) {
+            state.lockTimer += dt;
+          } else {
+            state.lockTimer = Math.max(0, state.lockTimer - dt * 0.5);
+          }
+          if (state.lockTimer > 0.55 || state.speed > 12) {
+            evaluateLaunch();
+          }
+        }
+      }
+
+      liveCoach();
+    }
+
+    function liveCoach() {
+      if (state.result || !state.running) return;
+      if (state.gear === 0) return;
+      if (state.clutch > 0.8 && state.speed < 1) {
+        if (state.throttle < 0.12) setCoach("Add a little gas so the tach sits near the green band (~2,000 rpm).");
+        else if (state.rpm < 1400) setCoach("Wait for the tach to reach the green band, then let the clutch up slowly.");
+        else setCoach("Good. Now let the clutch up slowly toward the gold friction zone.");
+        return;
+      }
+      if (inBite() && state.speed < 8) {
+        if (state.rpm < 1100) setCoach("That’s the bite — the engine is loading. Add a little more gas and keep it slow.");
+        else if (state.rpm > 3200) setCoach("That’s the bite, but that’s a lot of gas. Ease off a touch as you finish releasing.");
+        else setCoach("That’s the bite. Hold the zone for a moment, keep a little gas, then finish letting the clutch out.");
+        return;
+      }
+      if (state.engagement > 0.95 && state.speed > 3 && !state.result) {
+        setCoach("You’re rolling in " + (state.gear === 1 ? "1st" : state.gear === 2 ? "2nd" : "3rd") + ". Clutch in to shift up, or just enjoy the launch.");
+      }
+    }
+
+    function burst(n, kind) {
+      for (let i = 0; i < n; i++) {
+        particles.push({
+          kind,
+          x: 0, y: 0, // filled in draw relative to car
+          vx: (Math.random() - 0.5) * (kind === "burn" ? 18 : 30),
+          vy: kind === "burn" ? (-8 - Math.random() * 18) : (-4 - Math.random() * 16),
+          life: 0.4 + Math.random() * 0.5,
+          age: 0,
+          r: 3 + Math.random() * 7,
+        });
+      }
+    }
+
+    function stepParticles(dt) {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.age += dt;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.vy -= 8 * dt;
+        if (p.age >= p.life) particles.splice(i, 1);
+      }
+    }
+
+    // ----- rendering -----
+    const sceneCtx = els.scene.getContext("2d");
+    const tachCtx = els.tach.getContext("2d");
+
+    function resizeScene() {
+      const canvas = els.scene;
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+      }
+      sceneCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    function drawScene() {
+      const { w, h } = resizeScene();
+      const ctx = sceneCtx;
+      const scroll = state.pos;
+      const shakeX = state.shake ? (Math.random() - 0.5) * 2 * state.shake : 0;
+      const shakeY = state.shake ? (Math.random() - 0.5) * 2 * state.shake : 0;
+      ctx.clearRect(0, 0, w, h);
+
+      const sky = ctx.createLinearGradient(0, 0, 0, h * 0.62);
+      sky.addColorStop(0, "#b9d0dc");
+      sky.addColorStop(0.7, "#e6dcc8");
+      sky.addColorStop(1, "#efe6d4");
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.fillStyle = "#f3e2a8";
+      ctx.beginPath();
+      ctx.arc(w * 0.82, h * 0.18, 22, 0, Math.PI * 2);
+      ctx.fill();
+
+      drawHills(ctx, w, h, scroll * 0.15);
+      drawTrees(ctx, w, h, scroll * 0.4);
+
+      const groundY = h * 0.66;
+      ctx.fillStyle = "#6a7078";
+      ctx.fillRect(0, groundY, w, h - groundY);
+      const asphalt = ctx.createLinearGradient(0, groundY, 0, h);
+      asphalt.addColorStop(0, "#737986");
+      asphalt.addColorStop(1, "#555a62");
+      ctx.fillStyle = asphalt;
+      ctx.fillRect(0, groundY, w, h - groundY);
+
+      ctx.strokeStyle = "#f0ead8";
+      ctx.setLineDash([16, 18]);
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      const dashOff = -((scroll * 6) % 34);
+      ctx.moveTo(dashOff, groundY + (h - groundY) * 0.55);
+      ctx.lineTo(w + 20, groundY + (h - groundY) * 0.55);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.strokeStyle = "rgba(255,255,255,0.35)";
+      ctx.lineWidth = 2;
+      for (let i = -2; i < 18; i++) {
+        const x = ((i * 120) - (scroll * 6) % 120);
+        ctx.beginPath();
+        ctx.moveTo(x, groundY + 2);
+        ctx.lineTo(x + 40, h);
+        ctx.stroke();
+      }
+
+      for (let i = -1; i < 10; i++) {
+        const x = i * 220 - (scroll * 6) % 220 + 160;
+        drawCone(ctx, x, groundY + 6);
+      }
+
+      ctx.fillStyle = "rgba(28,25,22,0.55)";
+      ctx.font = "600 11px system-ui, sans-serif";
+      ctx.fillText("LEARNER LOT  ·  a game, not a driving lesson", 14, 18);
+
+      const carX = w * 0.28 + shakeX;
+      const carY = groundY + 8 + shakeY + state.squat * 3;
+      drawCar(ctx, carX, carY, 1, state.wheelAngle, state.stalled);
+
+      for (const p of particles) {
+        const alpha = 1 - p.age / p.life;
+        ctx.globalAlpha = Math.max(0, alpha);
+        ctx.fillStyle = p.kind === "burn" ? "#c9c3b8" : (p.kind === "grind" ? "#d2b48c" : "#cfc9c0");
+        const ox = p.kind === "burn" ? carX - 10 : carX - 70;
+        const oy = p.kind === "burn" ? carY - 18 : carY - 16;
+        ctx.beginPath();
+        ctx.arc(ox + p.x, oy + p.y, p.r * alpha, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function drawHills(ctx, w, h, scroll) {
+      ctx.fillStyle = "#9bb39a";
+      ctx.beginPath();
+      ctx.moveTo(0, h * 0.62);
+      for (let x = 0; x <= w; x += 8) {
+        const y = h * 0.50 + Math.sin((x + scroll) * 0.01) * 16 + Math.sin((x + scroll) * 0.023) * 10;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.fill();
+      ctx.fillStyle = "#86a38a";
+      ctx.beginPath();
+      ctx.moveTo(0, h * 0.64);
+      for (let x = 0; x <= w; x += 8) {
+        const y = h * 0.56 + Math.sin((x + scroll) * 0.016 + 2) * 12;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.fill();
+    }
+
+    function drawTrees(ctx, w, h, scroll) {
+      const ground = h * 0.66;
+      for (let i = 0; i < 8; i++) {
+        const x = ((i * 160) - scroll % 160);
+        const trunkH = 18 + (i % 3) * 4;
+        ctx.fillStyle = "#6b4f36";
+        ctx.fillRect(x + 18, ground - trunkH, 5, trunkH);
+        ctx.fillStyle = i % 2 ? "#3f6b4a" : "#4a7a54";
+        ctx.beginPath();
+        ctx.ellipse(x + 20, ground - trunkH - 6, 16, 18, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawCone(ctx, x, y) {
+      ctx.fillStyle = "#e56a2c";
+      ctx.beginPath();
+      ctx.moveTo(x, y - 22);
+      ctx.lineTo(x + 8, y);
+      ctx.lineTo(x - 8, y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = "#f4f0e8";
+      ctx.fillRect(x - 5, y - 12, 10, 3);
+      ctx.fillStyle = "#c24f1d";
+      ctx.fillRect(x - 9, y - 2, 18, 3);
+    }
+
+    function drawCar(ctx, x, y, scale, wheelAngle, stalled) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(scale, scale);
+      // shadow
+      ctx.fillStyle = "rgba(0,0,0,0.28)";
+      ctx.beginPath();
+      ctx.ellipse(0, 4, 78, 10, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      const body = stalled ? "#8a6a68" : "#2a8f7b";
+      const dark = stalled ? "#5a4342" : "#1e6a5c";
+      // body
+      ctx.fillStyle = body;
+      roundRect(ctx, -74, -38, 148, 32, 10);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(-30, -38);
+      ctx.lineTo(-16, -58);
+      ctx.lineTo(28, -58);
+      ctx.lineTo(52, -38);
+      ctx.closePath();
+      ctx.fill();
+      // windows
+      ctx.fillStyle = "#d8e6ee";
+      ctx.beginPath();
+      ctx.moveTo(-24, -40);
+      ctx.lineTo(-14, -54);
+      ctx.lineTo(10, -54);
+      ctx.lineTo(10, -40);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(14, -40);
+      ctx.lineTo(14, -54);
+      ctx.lineTo(26, -54);
+      ctx.lineTo(44, -40);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = dark;
+      ctx.fillRect(9, -54, 4, 14);
+      // bumper / lights
+      ctx.fillStyle = "#f3f0ea";
+      roundRect(ctx, 68, -28, 10, 10, 3);
+      ctx.fill();
+      ctx.fillStyle = stalled ? "#c44536" : "#f6d56b";
+      roundRect(ctx, 70, -26, 6, 6, 2);
+      ctx.fill();
+      ctx.fillStyle = "#c44536";
+      roundRect(ctx, -76, -26, 6, 6, 2);
+      ctx.fill();
+      // sticker
+      ctx.fillStyle = "#f4f0e8";
+      roundRect(ctx, 18, -32, 28, 10, 2);
+      ctx.fill();
+      ctx.fillStyle = "#1c1916";
+      ctx.font = "bold 8px system-ui, sans-serif";
+      ctx.fillText("GAME", 21, -24);
+      // wheels
+      drawWheel(ctx, -44, -2, 14, wheelAngle);
+      drawWheel(ctx, 48, -2, 14, wheelAngle);
+      ctx.restore();
+    }
+
+    function drawWheel(ctx, x, y, r, angle) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.fillStyle = "#1c1e22";
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#c9c3b8";
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.55, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.rotate(angle);
+      ctx.strokeStyle = "#1c1e22";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(-r * 0.45, 0);
+      ctx.lineTo(r * 0.45, 0);
+      ctx.moveTo(0, -r * 0.45);
+      ctx.lineTo(0, r * 0.45);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    function drawTach() {
+      const ctx = tachCtx;
+      const w = els.tach.width, h = els.tach.height;
+      const cx = w / 2, cy = h / 2 + 6, r = 64;
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = "#101317";
+      ctx.beginPath();
+      ctx.arc(cx, cy, r + 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#1c2126";
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      const start = Math.PI * 0.75;
+      const sweep = Math.PI * 1.5;
+      const rpmToA = (rpm) => start + (Math.max(0, Math.min(7000, rpm)) / 7000) * sweep;
+
+      // green launch band 1500-2500
+      ctx.strokeStyle = "rgba(56, 170, 120, 0.85)";
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r - 10, rpmToA(1500), rpmToA(2500));
+      ctx.stroke();
+      // redline
+      ctx.strokeStyle = "#c44536";
+      ctx.beginPath();
+      ctx.arc(cx, cy, r - 10, rpmToA(6000), rpmToA(7000));
+      ctx.stroke();
+
+      ctx.strokeStyle = "#e8e2d6";
+      ctx.fillStyle = "#e8e2d6";
+      ctx.lineWidth = 2;
+      ctx.font = "bold 10px system-ui, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      for (let i = 0; i <= 7; i++) {
+        const a = rpmToA(i * 1000);
+        const inner = r - (i === 6 || i === 7 ? 16 : 14);
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(a) * inner, cy + Math.sin(a) * inner);
+        ctx.lineTo(cx + Math.cos(a) * (r - 4), cy + Math.sin(a) * (r - 4));
+        ctx.stroke();
+        if (i !== 0 && i !== 7) {
+          ctx.fillStyle = i >= 6 ? "#e57368" : "#e8e2d6";
+          ctx.fillText(String(i), cx + Math.cos(a) * (r - 24), cy + Math.sin(a) * (r - 24));
+        }
+      }
+      const a = rpmToA(state.displayRpm);
+      ctx.strokeStyle = "#e8b03a";
+      ctx.lineWidth = 3;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(cx - Math.cos(a) * 10, cy - Math.sin(a) * 10);
+      ctx.lineTo(cx + Math.cos(a) * (r - 20), cy + Math.sin(a) * (r - 20));
+      ctx.stroke();
+      ctx.fillStyle = "#f2f0ea";
+      ctx.beginPath();
+      ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#f2eee6";
+      ctx.font = "bold 12px system-ui, sans-serif";
+      ctx.fillText(String(Math.round(state.displayRpm)), cx, cy + 16);
+      ctx.fillStyle = state.running ? "#7dffc0" : (state.stalled ? "#ff8d82" : "#9aa1a8");
+      ctx.font = "bold 8px system-ui, sans-serif";
+      ctx.fillText(state.running ? "RUN" : (state.stalled ? "STALL" : "OFF"), cx, cy + 28);
+    }
+
+    function updateHud() {
+      root.style.setProperty("--clutch", String(state.clutch));
+      root.style.setProperty("--gas", String(state.throttle));
+      els.speedRead.textContent = String(Math.round(state.speed));
+      const labels = ["N", "1st", "2nd", "3rd"];
+      els.gearRead.textContent = labels[state.gear];
+      const bite = inBite() && state.running && state.engagement > 0.08;
+      els.clutchGauge.classList.toggle("in-zone", bite || (inBite() && state.clutch < CFG.biteStart));
+      if (inBite()) els.clutchGauge.classList.add("in-zone");
+      else els.clutchGauge.classList.remove("in-zone");
+      els.biteLamp.classList.toggle("on", bite && Math.abs(state.slip) > 80);
+      els.btnStart.disabled = !!state.running;
+      els.clutchPedal.setAttribute("aria-valuenow", String(Math.round(state.clutch * 100)));
+      els.gasPedal.setAttribute("aria-valuenow", String(Math.round(state.throttle * 100)));
+    }
+
+    // ----- input -----
+    function bindPedal(el, setter) {
+      const track = el.querySelector(".pedal-track");
+      let active = false;
+      const read = (ev) => {
+        const rec = track.getBoundingClientRect();
+        const y = (ev.clientY - rec.top) / rec.height;
+        setter(Math.max(0, Math.min(1, y)));
+      };
+      const down = (ev) => {
+        setupAudio();
+        active = true;
+        el.setPointerCapture?.(ev.pointerId);
+        read(ev);
+        ev.preventDefault();
+      };
+      const move = (ev) => { if (active) { read(ev); ev.preventDefault(); } };
+      const up = (ev) => { active = false; };
+      track.addEventListener("pointerdown", down);
+      el.addEventListener("pointerdown", (ev) => {
+        if (ev.target === el || ev.target.tagName === "H2" || ev.target.classList.contains("hint")) {
+          down(ev);
+        }
+      });
+      el.addEventListener("pointermove", move);
+      el.addEventListener("pointerup", up);
+      el.addEventListener("pointercancel", up);
+    }
+    bindPedal(els.clutchPedal, (v) => { state.clutch = v; });
+    bindPedal(els.gasPedal, (v) => { state.throttle = v; });
+
+    function applyKeys(dt) {
+      let clutchDir = 0;
+      let clutchRate = CFG.clutchUpFast;
+      if (keys.has("z") || keys.has("shift") || keys.has(",")) {
+        clutchDir = 1;
+        clutchRate = CFG.clutchDownRate;
+      } else if (keys.has("c")) {
+        clutchDir = -1;
+        clutchRate = CFG.clutchUpFeather;
+      } else if (keys.has("x") || keys.has("/")) {
+        clutchDir = -1;
+        clutchRate = CFG.clutchUpFast;
+      }
+      if (clutchDir !== 0) {
+        state.clutch = Math.max(0, Math.min(1, state.clutch + clutchDir * clutchRate * dt));
+      }
+      let gasDir = 0;
+      if (keys.has("w") || keys.has("arrowup")) gasDir += 1;
+      if (keys.has("s") || keys.has("arrowdown")) gasDir -= 1;
+      if (gasDir !== 0) {
+        state.throttle = Math.max(0, Math.min(1, state.throttle + gasDir * CFG.gasRate * dt));
+      }
+    }
+
+    const keyMapDown = {
+      r: () => startEngine(),
+      " ": () => startEngine(),
+      enter: () => { if (state.result) { clearResult(true); startEngine(); } },
+      n: () => changeGear(0),
+      1: () => changeGear(1),
+      2: () => changeGear(2),
+      3: () => changeGear(3),
+      t: () => { clearResult(true); },
+      escape: () => hideHelp(),
+      "?": () => showHelp(),
+      "/": () => {},
+    };
+
+    window.addEventListener("keydown", (ev) => {
+      setupAudio();
+      const k = ev.key.length === 1 ? ev.key.toLowerCase() : ev.key.toLowerCase();
+      if ([" ", "arrowup", "arrowdown", "z", "x", "c", "w", "s"].includes(k) || ev.key === "Shift") {
+        ev.preventDefault();
+      }
+      keys.add(k);
+      if (ev.key === "Shift") keys.add("shift");
+      if (els.helpModal.classList.contains("show") && (k === "enter" || k === " " || k === "escape")) {
+        ev.preventDefault();
+        hideHelp();
+        return;
+      }
+      const fn = keyMapDown[k];
+      if (fn) fn();
+    });
+    window.addEventListener("keyup", (ev) => {
+      const k = ev.key.length === 1 ? ev.key.toLowerCase() : ev.key.toLowerCase();
+      keys.delete(k);
+      if (ev.key === "Shift") keys.delete("shift");
+    });
+    window.addEventListener("blur", () => keys.clear());
+
+    els.btnStart.addEventListener("click", () => { setupAudio(); startEngine(); });
+    els.btnRetry.addEventListener("click", () => { clearResult(true); });
+    els.btnHelp.addEventListener("click", showHelp);
+    els.btnLetsGo.addEventListener("click", hideHelp);
+    $("gearN").addEventListener("click", () => changeGear(0));
+    $("gear1").addEventListener("click", () => changeGear(1));
+    $("gear2").addEventListener("click", () => changeGear(2));
+    $("gear3").addEventListener("click", () => changeGear(3));
+
+    function showHelp() { els.helpModal.classList.add("show"); }
+    function hideHelp() { els.helpModal.classList.remove("show"); }
+
+    updateGearButtons();
+
+    // ----- loop -----
+    function frame(ts) {
+      if (!state.lastT) state.lastT = ts;
+      let dt = (ts - state.lastT) / 1000;
+      state.lastT = ts;
+      if (dt > 0.08) dt = 0.08;
+      state.acc += dt;
+      const step = 1 / 120;
+      let steps = 0;
+      while (state.acc >= step && steps < 8) {
+        applyKeys(step);
+        stepPhysics(step);
+        state.acc -= step;
+        steps++;
+      }
+      state.displayRpm += (state.rpm - state.displayRpm) * Math.min(1, 16 * dt);
+      stepParticles(dt);
+      updateAudio();
+      drawScene();
+      drawTach();
+      updateHud();
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    window.BitePoint = {
+      getState() {
+        return {
+          clutch: state.clutch,
+          throttle: state.throttle,
+          rpm: state.rpm,
+          speed: state.speed,
+          gear: state.gear,
+          running: state.running,
+          stalled: state.stalled,
+          engagement: state.engagement,
+          slip: state.slip,
+          result: state.result,
+          coach: state.coach,
+          attempts: stats.attempts,
+          cleanLaunches: stats.cleanLaunches,
+        };
+      },
+      setControls(partial) {
+        if (partial.clutch != null) state.clutch = Math.max(0, Math.min(1, partial.clutch));
+        if (partial.throttle != null) state.throttle = Math.max(0, Math.min(1, partial.throttle));
+        if (partial.gear != null) changeGear(partial.gear);
+      },
+      startEngine,
+      reset: () => { state.running = false; clearResult(true); },
+      hideHelp,
+      CFG,
+    };
+  })();
+  </script>
+</body>
+</html>
