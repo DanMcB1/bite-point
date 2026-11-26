@@ -108,34 +108,34 @@
     }
     .instruments {
       display: grid;
-      grid-template-columns: 170px 1fr 180px;
-      gap: 8px;
+      grid-template-columns: 128px 1fr 138px;
+      gap: 6px;
       align-items: stretch;
       background: var(--panel-2);
-      padding: 10px 12px 12px;
+      padding: 6px 10px 8px;
       color: var(--cream);
     }
     .tach-card, .clutch-card {
       background: #1a1d21;
-      border-radius: 14px;
-      padding: 8px;
+      border-radius: 12px;
+      padding: 4px 6px 6px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
     .card-label {
-      font-size: 0.68rem;
+      font-size: 0.62rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: #b9b1a5;
-      margin-bottom: 2px;
+      margin-bottom: 0;
     }
-    #tach { width: 150px; height: 150px; display: block; }
-    .clutch-card { padding: 8px 10px 10px; }
+    #tach { width: 108px; height: 108px; display: block; }
+    .clutch-card { padding: 4px 8px 6px; }
     .cz {
       position: relative;
       width: 100%;
-      height: 150px;
+      height: 108px;
       border-radius: 12px;
       background: linear-gradient(180deg, #2a2f34 0%, #22262b 100%);
       border: 1px solid #3a4148;
@@ -143,15 +143,15 @@
     }
     .cz-top, .cz-bot {
       position: absolute;
-      left: 8px;
-      font-size: 0.64rem;
+      left: 6px;
+      font-size: 0.58rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: #9aa1a8;
       z-index: 2;
     }
-    .cz-top { top: 6px; }
-    .cz-bot { bottom: 6px; }
+    .cz-top { top: 4px; }
+    .cz-bot { bottom: 4px; }
     .cz-zone {
       position: absolute;
       left: 0; right: 0;
@@ -167,7 +167,7 @@
       transition: background 0.15s, box-shadow 0.15s;
     }
     .cz-zone span {
-      font-size: 0.62rem;
+      font-size: 0.58rem;
       font-weight: 800;
       letter-spacing: 0.1em;
       color: #f3d48a;
@@ -198,14 +198,14 @@
       border-left-color: #f2f0ea;
     }
     .bite-lamp {
-      margin-top: 6px;
-      font-size: 0.68rem;
+      margin-top: 4px;
+      font-size: 0.6rem;
       font-weight: 800;
       letter-spacing: 0.16em;
       color: #5a5348;
       background: #14171a;
       border-radius: 99px;
-      padding: 3px 10px;
+      padding: 2px 8px;
     }
     .bite-lamp.on {
       color: #1a1204;
@@ -216,30 +216,30 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 8px;
-      padding: 4px 4px 0;
+      gap: 6px;
+      padding: 0;
     }
     .readout-row {
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }
     .readout {
       flex: 1;
       background: #1a1d21;
-      border-radius: 12px;
-      padding: 8px 10px;
+      border-radius: 10px;
+      padding: 4px 8px 5px;
       text-align: center;
     }
     .readout .v {
       font-variant-numeric: tabular-nums;
-      font-size: 1.55rem;
+      font-size: 1.22rem;
       font-weight: 800;
       line-height: 1;
     }
     .readout .u {
       display: block;
-      margin-top: 3px;
-      font-size: 0.66rem;
+      margin-top: 2px;
+      font-size: 0.6rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: #9aa1a8;
@@ -247,12 +247,12 @@
     .coach {
       flex: 1;
       background: #1a1d21;
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-size: 0.92rem;
-      line-height: 1.35;
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 0.84rem;
+      line-height: 1.3;
       color: #f0e7d8;
-      min-height: 64px;
+      min-height: 44px;
       display: flex;
       align-items: center;
     }
@@ -261,28 +261,28 @@
       display: none;
       background: #16181c;
       color: #fff;
-      padding: 12px 16px 14px;
+      padding: 8px 14px 10px;
       border-top: 1px solid #2c3238;
     }
     .result.show { display: block; }
     .result .kind {
-      font-size: 1.3rem;
+      font-size: 1.15rem;
       font-weight: 800;
       letter-spacing: 0.04em;
     }
     .result.stall .kind { color: #ff8d82; }
     .result.rough .kind { color: #ffc56b; }
     .result.smooth .kind { color: #7dffc0; }
-    .stars { color: var(--gold); letter-spacing: 0.15em; margin: 4px 0 6px; font-size: 1.15rem; }
-    .result .tip { color: #f0e7d8; font-size: 0.95rem; line-height: 1.4; }
-    .result .score { margin-top: 4px; color: #c9c0b3; font-size: 0.8rem; }
-    .result .actions { margin-top: 10px; display: flex; gap: 8px; }
+    .stars { color: var(--gold); letter-spacing: 0.15em; margin: 2px 0 4px; font-size: 1.05rem; }
+    .result .tip { color: #f0e7d8; font-size: 0.88rem; line-height: 1.35; }
+    .result .score { margin-top: 2px; color: #c9c0b3; font-size: 0.76rem; }
+    .result .actions { margin-top: 8px; display: flex; gap: 8px; }
 
     .controls {
       display: grid;
       grid-template-columns: 1fr 180px 1fr;
       gap: 12px;
-      margin-top: 12px;
+      margin-top: 8px;
       align-items: stretch;
     }
     .pedal {
@@ -432,8 +432,11 @@
       #scene { height: 190px; }
       .instruments { grid-template-columns: 1fr 1fr; }
       .center-readouts { grid-column: 1 / -1; }
-      #tach { width: 132px; height: 132px; }
-      .cz { height: 132px; }
+      #tach { width: 96px; height: 96px; }
+      .cz { height: 96px; }
+      .tach-card { grid-column: 1; grid-row: 1; }
+      .clutch-card { grid-column: 2; grid-row: 1; }
+      .center-readouts { grid-column: 1 / -1; grid-row: 2; }
       .controls { grid-template-columns: 1fr 1fr; }
       .center-controls { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; }
       .gears { flex: 1; }
@@ -473,7 +476,7 @@
       <div class="instruments">
         <div class="tach-card">
           <div class="card-label">Tachometer</div>
-          <canvas id="tach" width="150" height="150"></canvas>
+          <canvas id="tach" width="108" height="108"></canvas>
         </div>
         <div class="center-readouts">
           <div class="readout-row">
@@ -1182,20 +1185,23 @@
         drawCone(ctx, x, groundY + 6);
       }
 
+      drawCheckeredCurb(ctx, w, h, scroll);
+
       ctx.fillStyle = "rgba(28,25,22,0.55)";
       ctx.font = "600 11px system-ui, sans-serif";
       ctx.fillText("LEARNER LOT  ·  a game, not a driving lesson", 14, 18);
 
-      const carX = w * 0.28 + shakeX;
-      const carY = groundY + 8 + shakeY + state.squat * 3;
+      const carHalf = 156;
+      const carX = Math.max(w * 0.32, carHalf + 10) + shakeX;
+      const carY = groundY + 5 + shakeY + state.squat * 3;
       drawCar(ctx, carX, carY, 1, state.wheelAngle, state.stalled);
 
       for (const p of particles) {
         const alpha = 1 - p.age / p.life;
         ctx.globalAlpha = Math.max(0, alpha);
         ctx.fillStyle = p.kind === "burn" ? "#c9c3b8" : (p.kind === "grind" ? "#d2b48c" : "#cfc9c0");
-        const ox = p.kind === "burn" ? carX - 10 : carX - 70;
-        const oy = p.kind === "burn" ? carY - 18 : carY - 16;
+        const ox = p.kind === "burn" ? carX + 20 : carX - 146;
+        const oy = p.kind === "burn" ? carY - 10 : carY - 14;
         ctx.beginPath();
         ctx.arc(ox + p.x, oy + p.y, p.r * alpha, 0, Math.PI * 2);
         ctx.fill();
@@ -1240,6 +1246,24 @@
       }
     }
 
+    function drawCheckeredCurb(ctx, w, h, scroll) {
+      const curbH = 12;
+      const y = h - curbH;
+      const size = 10;
+      const off = -((scroll * 6) % (size * 2));
+      for (let row = 0; row < 2; row++) {
+        for (let x = off - size * 2; x < w + size; x += size) {
+          const col = Math.floor((x - off) / size);
+          ctx.fillStyle = ((col + row) % 2 === 0) ? "rgba(22,22,24,0.88)" : "rgba(236,232,224,0.9)";
+          ctx.fillRect(x, y + row * (curbH / 2), size + 0.5, curbH / 2 + 0.5);
+        }
+      }
+      ctx.fillStyle = "rgba(0,0,0,0.22)";
+      ctx.fillRect(0, y - 2, w, 2);
+      ctx.fillStyle = "rgba(210,206,198,0.45)";
+      ctx.fillRect(0, y - 1, w, 1);
+    }
+
     function drawCone(ctx, x, y) {
       ctx.fillStyle = "#e56a2c";
       ctx.beginPath();
@@ -1254,90 +1278,545 @@
       ctx.fillRect(x - 9, y - 2, 18, 3);
     }
 
+    function chromeGrad(ctx, x0, y0, x1, y1) {
+      const g = ctx.createLinearGradient(x0, y0, x1, y1);
+      g.addColorStop(0, "#f7f4ee");
+      g.addColorStop(0.22, "#c5c1b8");
+      g.addColorStop(0.48, "#8d8982");
+      g.addColorStop(0.72, "#ece8e0");
+      g.addColorStop(1, "#6f6b65");
+      return g;
+    }
+
+    function fillImpalaBody(ctx, stalled) {
+      const rockerY = 3.8;
+      const wellR = 18.3;
+      const rearW = -74;
+      const frontW = 76;
+      ctx.beginPath();
+      // rear corner up onto a long flat trunk deck
+      ctx.moveTo(-146, 1);
+      ctx.bezierCurveTo(-152, 0.2, -154, -4, -153.2, -9);
+      ctx.bezierCurveTo(-152.5, -16, -150, -21.5, -146.5, -24.6);
+      ctx.bezierCurveTo(-144.5, -25.8, -142, -26.2, -139, -26.2);
+      ctx.lineTo(-72, -26.2);
+      // long, gently sloping C-pillar that blends into the trunk just ahead of the rear axle
+      ctx.bezierCurveTo(-62, -27.5, -46, -42, -30, -47.8);
+      ctx.bezierCurveTo(-22, -50.6, -6, -51.4, 12, -50.4);
+      // short flat roof, raked windshield to a compact cowl — leaves a long hood
+      ctx.bezierCurveTo(18, -49.8, 28, -39, 36, -26.6);
+      ctx.lineTo(122, -25.2);
+      ctx.bezierCurveTo(127, -24.8, 131, -20, 132, -13);
+      ctx.bezierCurveTo(136.5, -11.4, 139, -7.5, 138.6, -2.6);
+      ctx.bezierCurveTo(138.2, 1.4, 135, 3.3, 131, 3.6);
+      const frontRight = frontW + Math.sqrt(Math.max(0, wellR * wellR - rockerY * rockerY));
+      ctx.lineTo(frontRight, rockerY);
+      ctx.arc(frontW, 0, wellR, Math.atan2(rockerY, frontRight - frontW), Math.atan2(rockerY, -(frontRight - frontW)), true);
+      const rearRight = rearW + Math.sqrt(Math.max(0, wellR * wellR - rockerY * rockerY));
+      ctx.lineTo(rearRight, rockerY);
+      ctx.arc(rearW, 0, wellR, Math.atan2(rockerY, rearRight - rearW), Math.atan2(rockerY, -(rearRight - rearW)), true);
+      ctx.lineTo(-145, rockerY);
+      ctx.bezierCurveTo(-147.5, 3.2, -148.5, 2, -146, 1);
+      ctx.closePath();
+
+      const g = ctx.createLinearGradient(0, -52, 0, 8);
+      if (stalled) {
+        g.addColorStop(0, "#4a3c3b");
+        g.addColorStop(0.28, "#6a5653");
+        g.addColorStop(0.5, "#8a746f");
+        g.addColorStop(0.72, "#4a3c3b");
+        g.addColorStop(1, "#2a2222");
+      } else {
+        g.addColorStop(0, "#2a2e34");
+        g.addColorStop(0.2, "#3e454e");
+        g.addColorStop(0.42, "#5a636e");
+        g.addColorStop(0.58, "#2c3238");
+        g.addColorStop(0.82, "#1c2024");
+        g.addColorStop(1, "#121416");
+      }
+      ctx.fillStyle = g;
+      ctx.fill();
+
+      ctx.save();
+      ctx.clip();
+      const band = ctx.createLinearGradient(0, -26, 0, -8);
+      band.addColorStop(0, "rgba(0,0,0,0)");
+      band.addColorStop(0.22, "rgba(210,220,230,0.08)");
+      band.addColorStop(0.42, "rgba(230,238,246,0.30)");
+      band.addColorStop(0.58, "rgba(200,210,220,0.10)");
+      band.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = band;
+      ctx.fillRect(-150, -28, 290, 22);
+      const gleam = ctx.createLinearGradient(-150, -20, 140, -10);
+      gleam.addColorStop(0, "rgba(255,255,255,0)");
+      gleam.addColorStop(0.3, "rgba(255,255,255,0.04)");
+      gleam.addColorStop(0.48, "rgba(255,255,255,0.14)");
+      gleam.addColorStop(0.62, "rgba(255,255,255,0.03)");
+      gleam.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = gleam;
+      ctx.fillRect(-150, -28, 290, 20);
+      const lower = ctx.createLinearGradient(0, -2, 0, 8);
+      lower.addColorStop(0, "rgba(0,0,0,0)");
+      lower.addColorStop(1, "rgba(0,0,0,0.32)");
+      ctx.fillStyle = lower;
+      ctx.fillRect(-152, -2, 294, 12);
+      ctx.restore();
+
+      ctx.strokeStyle = stalled ? "rgba(40,30,30,0.4)" : "rgba(8,8,10,0.45)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
     function drawCar(ctx, x, y, scale, wheelAngle, stalled) {
       ctx.save();
       ctx.translate(x, y);
       ctx.scale(scale, scale);
-      // shadow
-      ctx.fillStyle = "rgba(0,0,0,0.28)";
+
+      const rearW = -74;
+      const frontW = 76;
+      const tireR = 17;
+
+      ctx.fillStyle = "rgba(0,0,0,0.30)";
       ctx.beginPath();
-      ctx.ellipse(0, 4, 78, 10, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 15.6, 142, 6.5, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      const body = stalled ? "#8a6a68" : "#2a8f7b";
-      const dark = stalled ? "#5a4342" : "#1e6a5c";
-      // body
-      ctx.fillStyle = body;
-      roundRect(ctx, -74, -38, 148, 32, 10);
-      ctx.fill();
+      // rear chrome bumper blade
+      ctx.fillStyle = chromeGrad(ctx, -154, -16, -142, 5);
       ctx.beginPath();
-      ctx.moveTo(-30, -38);
-      ctx.lineTo(-16, -58);
-      ctx.lineTo(28, -58);
-      ctx.lineTo(52, -38);
+      ctx.moveTo(-143, 3.4);
+      ctx.lineTo(-144, -14.5);
+      ctx.bezierCurveTo(-149, -16.2, -155, -14, -155.5, -8);
+      ctx.bezierCurveTo(-155.8, -3, -153.8, 2.6, -148, 4.2);
+      ctx.quadraticCurveTo(-144, 4.4, -143, 3.4);
       ctx.closePath();
       ctx.fill();
-      // windows
-      ctx.fillStyle = "#d8e6ee";
+      ctx.strokeStyle = "rgba(40,40,42,0.3)";
+      ctx.lineWidth = 0.7;
+      ctx.stroke();
+
+      fillImpalaBody(ctx, stalled);
+
+      // sliver of trunk and hood top surfaces
+      ctx.fillStyle = stalled ? "rgba(120,100,96,0.45)" : "rgba(118,128,138,0.5)";
       ctx.beginPath();
-      ctx.moveTo(-24, -40);
-      ctx.lineTo(-14, -54);
-      ctx.lineTo(10, -54);
-      ctx.lineTo(10, -40);
+      ctx.moveTo(-139, -26.2);
+      ctx.lineTo(-72, -26.2);
+      ctx.lineTo(-71.4, -27.8);
+      ctx.lineTo(-138.2, -27.8);
       ctx.closePath();
       ctx.fill();
       ctx.beginPath();
-      ctx.moveTo(14, -40);
-      ctx.lineTo(14, -54);
-      ctx.lineTo(26, -54);
-      ctx.lineTo(44, -40);
+      ctx.moveTo(36, -26.6);
+      ctx.lineTo(122, -25.2);
+      ctx.lineTo(121.2, -26.8);
+      ctx.lineTo(36.8, -28);
       ctx.closePath();
       ctx.fill();
-      ctx.fillStyle = dark;
-      ctx.fillRect(9, -54, 4, 14);
-      // bumper / lights
-      ctx.fillStyle = "#f3f0ea";
-      roundRect(ctx, 68, -28, 10, 10, 3);
+      ctx.strokeStyle = stalled ? "rgba(220,200,195,0.3)" : "rgba(236,242,248,0.55)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(-139, -26.2);
+      ctx.lineTo(-72, -26.2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(36, -26.6);
+      ctx.lineTo(122, -25.2);
+      ctx.stroke();
+
+      // lower rocker chrome, interrupted by the wells
+      ctx.lineWidth = 2.1;
+      ctx.strokeStyle = chromeGrad(ctx, 0, 1, 0, 6);
+      ctx.beginPath();
+      ctx.moveTo(-140, 3.5);
+      ctx.lineTo(-90, 3.5);
+      ctx.moveTo(-57, 3.5);
+      ctx.lineTo(60, 3.5);
+      ctx.moveTo(93, 3.5);
+      ctx.lineTo(130, 3.5);
+      ctx.stroke();
+
+      // crisp single side spear, mid-body, nearly full length
+      const spear = ctx.createLinearGradient(-140, -13, 128, -12);
+      spear.addColorStop(0, "#c8c4bc");
+      spear.addColorStop(0.35, "#f7f4ee");
+      spear.addColorStop(0.7, "#9a968e");
+      spear.addColorStop(1, "#e8e4dc");
+      ctx.strokeStyle = "rgba(0,0,0,0.25)";
+      ctx.lineWidth = 2.0;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(-140, -13.2);
+      ctx.lineTo(126, -12.2);
+      ctx.stroke();
+      ctx.strokeStyle = spear;
+      ctx.lineWidth = 1.35;
+      ctx.beginPath();
+      ctx.moveTo(-140, -13.2);
+      ctx.lineTo(126, -12.2);
+      ctx.stroke();
+      ctx.lineCap = "butt";
+
+      // long 2-door cut and a small chrome handle
+      ctx.strokeStyle = "rgba(0,0,0,0.22)";
+      ctx.lineWidth = 0.7;
+      ctx.beginPath();
+      ctx.moveTo(34.5, -25.8);
+      ctx.lineTo(33.6, 2.4);
+      ctx.moveTo(-28, -25.8);
+      ctx.lineTo(-28.4, 2.4);
+      ctx.stroke();
+      ctx.fillStyle = chromeGrad(ctx, 10, -15, 20, -11);
+      roundRect(ctx, 12, -14.2, 8, 1.8, 0.7);
       ctx.fill();
-      ctx.fillStyle = stalled ? "#c44536" : "#f6d56b";
-      roundRect(ctx, 70, -26, 6, 6, 2);
+
+      // painted metal roof band (~38% of cabin height) and a wide C-pillar sail
+      const roofPaint = stalled
+        ? ctx.createLinearGradient(0, -52, 0, -40)
+        : ctx.createLinearGradient(0, -52, 0, -40);
+      if (stalled) {
+        roofPaint.addColorStop(0, "#6a5653");
+        roofPaint.addColorStop(0.45, "#8a746f");
+        roofPaint.addColorStop(1, "#4a3c3b");
+      } else {
+        roofPaint.addColorStop(0, "#4a515a");
+        roofPaint.addColorStop(0.35, "#6a7380");
+        roofPaint.addColorStop(0.7, "#3a4148");
+        roofPaint.addColorStop(1, "#2a3036");
+      }
+      ctx.fillStyle = roofPaint;
+      // roof panel: outer roofline down to the window header
+      ctx.beginPath();
+      ctx.moveTo(22.5, -41.6);
+      ctx.lineTo(18, -50);
+      ctx.bezierCurveTo(12, -51.6, -6, -51.6, -28, -48.4);
+      ctx.lineTo(-32.5, -41.4);
+      ctx.closePath();
       ctx.fill();
-      ctx.fillStyle = "#c44536";
-      roundRect(ctx, -76, -26, 6, 6, 2);
+      // sliver of the roof top surface
+      ctx.fillStyle = stalled ? "rgba(120,100,96,0.45)" : "rgba(130,140,150,0.5)";
+      ctx.beginPath();
+      ctx.moveTo(18, -50);
+      ctx.bezierCurveTo(12, -51.6, -6, -51.6, -28, -48.4);
+      ctx.lineTo(-27.2, -50);
+      ctx.bezierCurveTo(-6, -53, 12, -53, 18.6, -51.4);
+      ctx.closePath();
       ctx.fill();
-      // sticker
-      ctx.fillStyle = "#f4f0e8";
-      roundRect(ctx, 18, -32, 28, 10, 2);
+      ctx.strokeStyle = stalled ? "rgba(220,200,195,0.3)" : "rgba(236,242,248,0.55)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(18, -50);
+      ctx.bezierCurveTo(12, -51.6, -6, -51.6, -28, -48.4);
+      ctx.stroke();
+      // glossy highlight along the painted roof
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(22.5, -41.6);
+      ctx.lineTo(18, -50);
+      ctx.bezierCurveTo(12, -51.6, -6, -51.6, -28, -48.4);
+      ctx.lineTo(-32.5, -41.4);
+      ctx.closePath();
+      ctx.clip();
+      const roofShine = ctx.createLinearGradient(0, -52, 0, -41);
+      roofShine.addColorStop(0, "rgba(255,255,255,0.22)");
+      roofShine.addColorStop(0.4, "rgba(220,230,240,0.12)");
+      roofShine.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = roofShine;
+      ctx.fillRect(-36, -54, 64, 16);
+      ctx.restore();
+
+      // wide painted C-pillar sail sweeping into the trunk
+      ctx.fillStyle = roofPaint;
+      ctx.beginPath();
+      ctx.moveTo(-34, -26.2);
+      ctx.lineTo(-31.5, -41.4);
+      ctx.lineTo(-28, -48.4);
+      ctx.bezierCurveTo(-40, -44, -56, -34, -72, -26.2);
+      ctx.closePath();
       ctx.fill();
+      const sailShade = ctx.createLinearGradient(-28, -48, -72, -26);
+      sailShade.addColorStop(0, "rgba(255,255,255,0.10)");
+      sailShade.addColorStop(0.45, "rgba(0,0,0,0)");
+      sailShade.addColorStop(1, "rgba(0,0,0,0.18)");
+      ctx.fillStyle = sailShade;
+      ctx.beginPath();
+      ctx.moveTo(-34, -26.2);
+      ctx.lineTo(-31.5, -41.4);
+      ctx.lineTo(-28, -48.4);
+      ctx.bezierCurveTo(-40, -44, -56, -34, -72, -26.2);
+      ctx.closePath();
+      ctx.fill();
+
+      // slim painted A-pillar
+      ctx.fillStyle = roofPaint;
+      ctx.beginPath();
+      ctx.moveTo(36, -26.6);
+      ctx.bezierCurveTo(28, -39, 18, -49.8, 14, -50.4);
+      ctx.lineTo(18.2, -50);
+      ctx.lineTo(22.5, -41.6);
+      ctx.lineTo(31.8, -26.6);
+      ctx.closePath();
+      ctx.fill();
+
+      // chrome drip rail at the lower edge of the roof band
+      ctx.strokeStyle = chromeGrad(ctx, 0, -44, 0, -40);
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(22.5, -41.6);
+      ctx.lineTo(-32.5, -41.4);
+      ctx.stroke();
+
+      // shorter side windows below the roof band
+      const glass = ctx.createLinearGradient(0, -42, 0, -26);
+      glass.addColorStop(0, stalled ? "#9aa6ab" : "#d2e3ec");
+      glass.addColorStop(0.45, stalled ? "#7e8b90" : "#9eb8c6");
+      glass.addColorStop(1, stalled ? "#5c686c" : "#628091");
+      ctx.fillStyle = glass;
+      // door window
+      ctx.beginPath();
+      ctx.moveTo(31.4, -26.4);
+      ctx.lineTo(22.2, -41.3);
+      ctx.lineTo(-16.6, -41.4);
+      ctx.lineTo(-18.2, -26.4);
+      ctx.closePath();
+      ctx.fill();
+      // small rear quarter window ahead of the sail
+      ctx.beginPath();
+      ctx.moveTo(-20.2, -26.4);
+      ctx.lineTo(-18.6, -41.4);
+      ctx.lineTo(-30.6, -41.2);
+      ctx.lineTo(-33.6, -26.4);
+      ctx.closePath();
+      ctx.fill();
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(31.4, -26.4);
+      ctx.lineTo(22.2, -41.3);
+      ctx.lineTo(-16.6, -41.4);
+      ctx.lineTo(-18.2, -26.4);
+      ctx.closePath();
+      ctx.clip();
+      ctx.fillStyle = "rgba(255,255,255,0.15)";
+      ctx.beginPath();
+      ctx.moveTo(10, -42);
+      ctx.lineTo(15, -42);
+      ctx.lineTo(6, -26);
+      ctx.lineTo(1, -26);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      // thin chrome window frames and a hairline divider (no B-pillar)
+      ctx.strokeStyle = chromeGrad(ctx, 0, -42, 0, -26);
+      ctx.lineWidth = 1.1;
+      ctx.beginPath();
+      ctx.moveTo(31.6, -26.3);
+      ctx.lineTo(22.4, -41.3);
+      ctx.lineTo(-16.8, -41.4);
+      ctx.lineTo(-18.4, -26.3);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-20, -26.3);
+      ctx.lineTo(-18.5, -41.4);
+      ctx.lineTo(-30.7, -41.2);
+      ctx.lineTo(-33.8, -26.3);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(-19.3, -41.4);
+      ctx.lineTo(-19.4, -26.3);
+      ctx.stroke();
+
+      // side mirror at the A-pillar
+      ctx.fillStyle = chromeGrad(ctx, 28, -32, 36, -24);
+      ctx.beginPath();
+      ctx.ellipse(32.2, -27, 3.1, 1.9, -0.22, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#1a1c20";
+      ctx.beginPath();
+      ctx.ellipse(31.9, -27, 1.6, 1.05, -0.22, 0, Math.PI * 2);
+      ctx.fill();
+
+      // small thin chrome IMPALA script just ahead of the taillight, emblem after it
+      ctx.save();
+      ctx.fillStyle = chromeGrad(ctx, -138, -20, -116, -14);
+      ctx.font = "italic 600 5.5px 'Times New Roman', Times, Georgia, serif";
+      ctx.fillText("IMPALA", -137.2, -16.8);
+      ctx.restore();
+      ctx.fillStyle = chromeGrad(ctx, -112, -20, -106, -14);
+      ctx.beginPath();
+      ctx.arc(-107.2, -17.8, 2.25, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = stalled ? "#6a2a24" : "#7a1e1a";
+      ctx.beginPath();
+      ctx.arc(-107.2, -17.8, 1.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(232, 196, 96, 0.85)";
+      ctx.lineWidth = 0.55;
+      ctx.beginPath();
+      ctx.arc(-107.2, -17.8, 1.2, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // tail lamp at the rear corner
+      ctx.fillStyle = chromeGrad(ctx, -146, -24, -138, -12);
+      roundRect(ctx, -145.2, -23.4, 6.2, 9.4, 1.3);
+      ctx.fill();
+      const lamp = stalled ? "#8a2a24" : "#e0221c";
+      const lampHi = stalled ? "#c45a48" : "#ff6a58";
+      for (let i = 0; i < 3; i++) {
+        const ly = -21 + i * 2.7;
+        const lg = ctx.createRadialGradient(-142.2, ly - 0.3, 0.2, -142, ly, 1.3);
+        lg.addColorStop(0, lampHi);
+        lg.addColorStop(1, lamp);
+        ctx.fillStyle = lg;
+        ctx.beginPath();
+        ctx.arc(-142.2, ly, 1.15, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // slim chrome grille edge and headlight
+      ctx.fillStyle = chromeGrad(ctx, 128, -22, 135, -6);
+      ctx.fillRect(130.4, -20.5, 1.5, 13.5);
+      ctx.beginPath();
+      ctx.arc(129.6, -16.2, 4.7, 0, Math.PI * 2);
+      ctx.fill();
+      const hl = ctx.createRadialGradient(128.6, -17.4, 0.5, 129.6, -16.2, 3.8);
+      if (stalled) {
+        hl.addColorStop(0, "#e8c8b8");
+        hl.addColorStop(0.55, "#a07068");
+        hl.addColorStop(1, "#6a3834");
+      } else {
+        hl.addColorStop(0, "#fffaf0");
+        hl.addColorStop(0.45, "#f2d978");
+        hl.addColorStop(1, "#c9a028");
+      }
+      ctx.fillStyle = hl;
+      ctx.beginPath();
+      ctx.arc(129.6, -16.2, 3.25, 0, Math.PI * 2);
+      ctx.fill();
+
+      // full-width front chrome bumper blade
+      ctx.fillStyle = chromeGrad(ctx, 128, -16, 141, 5);
+      ctx.beginPath();
+      ctx.moveTo(128.4, 3.2);
+      ctx.lineTo(129.4, -14.8);
+      ctx.bezierCurveTo(134, -16.6, 140.5, -13.5, 140.8, -7);
+      ctx.bezierCurveTo(141, -2.2, 138.4, 3.2, 133, 4.4);
+      ctx.quadraticCurveTo(129, 4.2, 128.4, 3.2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = "rgba(40,40,42,0.3)";
+      ctx.lineWidth = 0.7;
+      ctx.stroke();
+
+      // small rear GAME plate
+      ctx.fillStyle = "#f0e6c8";
+      roundRect(ctx, -154.6, -9, 12.4, 5.5, 0.7);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(40,40,42,0.5)";
+      ctx.lineWidth = 0.45;
+      ctx.stroke();
       ctx.fillStyle = "#1c1916";
-      ctx.font = "bold 8px system-ui, sans-serif";
-      ctx.fillText("GAME", 21, -24);
-      // wheels
-      drawWheel(ctx, -44, -2, 14, wheelAngle);
-      drawWheel(ctx, 48, -2, 14, wheelAngle);
+      ctx.font = "bold 3.3px system-ui, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("GAME", -148.4, -4.9);
+      ctx.textAlign = "start";
+
+      // thin trunk antenna, raked back
+      ctx.strokeStyle = "#d0ccc4";
+      ctx.lineWidth = 0.8;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(-96, -26.6);
+      ctx.lineTo(-106, -70);
+      ctx.stroke();
+      ctx.fillStyle = "#eeeae2";
+      ctx.beginPath();
+      ctx.arc(-106, -70, 1.05, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.lineCap = "butt";
+
+      drawWheel(ctx, rearW, 0, tireR, wheelAngle);
+      drawWheel(ctx, frontW, 0, tireR, wheelAngle);
+
       ctx.restore();
     }
 
     function drawWheel(ctx, x, y, r, angle) {
       ctx.save();
       ctx.translate(x, y);
-      ctx.fillStyle = "#1c1e22";
+      ctx.fillStyle = "rgba(0,0,0,0.35)";
+      ctx.beginPath();
+      ctx.ellipse(0, r * 0.9, r * 0.72, 2.3, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      const tire = ctx.createRadialGradient(-r * 0.15, -r * 0.2, r * 0.15, 0, 0, r);
+      tire.addColorStop(0, "#2c2d31");
+      tire.addColorStop(0.74, "#121315");
+      tire.addColorStop(0.88, "#222327");
+      tire.addColorStop(1, "#070708");
+      ctx.fillStyle = tire;
       ctx.beginPath();
       ctx.arc(0, 0, r, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = "#c9c3b8";
+      ctx.strokeStyle = "rgba(80,80,84,0.55)";
+      ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.arc(0, 0, r * 0.55, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.rotate(angle);
-      ctx.strokeStyle = "#1c1e22";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(-r * 0.45, 0);
-      ctx.lineTo(r * 0.45, 0);
-      ctx.moveTo(0, -r * 0.45);
-      ctx.lineTo(0, r * 0.45);
+      ctx.arc(0, 0, r - 1.15, 0, Math.PI * 2);
       ctx.stroke();
+
+      const rimR = r * 0.78;
+      ctx.fillStyle = chromeGrad(ctx, -rimR, -rimR, rimR, rimR);
+      ctx.beginPath();
+      ctx.arc(0, 0, rimR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#16181c";
+      ctx.beginPath();
+      ctx.arc(0, 0, rimR - 2.15, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(220,216,208,0.28)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(0, 0, rimR - 3.1, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.save();
+      ctx.rotate(angle);
+      const spokes = 10;
+      for (let i = 0; i < spokes; i++) {
+        ctx.rotate((Math.PI * 2) / spokes);
+        const sg = ctx.createLinearGradient(-2, 0, 2, 0);
+        sg.addColorStop(0, "#8a8680");
+        sg.addColorStop(0.35, "#f4f1ea");
+        sg.addColorStop(1, "#6a6660");
+        ctx.fillStyle = sg;
+        ctx.beginPath();
+        ctx.moveTo(-1.05, 2.6);
+        ctx.lineTo(1.05, 2.6);
+        ctx.lineTo(1.55, rimR - 3.3);
+        ctx.lineTo(-1.55, rimR - 3.3);
+        ctx.closePath();
+        ctx.fill();
+      }
+      ctx.restore();
+
+      const capR = r * 0.22;
+      ctx.fillStyle = chromeGrad(ctx, -capR, -capR, capR, capR);
+      ctx.beginPath();
+      ctx.arc(0, 0, capR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(20,20,24,0.35)";
+      ctx.beginPath();
+      ctx.arc(0, 0, capR * 0.45, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,0.35)";
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.arc(-0.6, -0.8, capR * 0.7, -0.2, 1.4);
+      ctx.stroke();
+
       ctx.restore();
     }
 
@@ -1354,7 +1833,8 @@
     function drawTach() {
       const ctx = tachCtx;
       const w = els.tach.width, h = els.tach.height;
-      const cx = w / 2, cy = h / 2 + 6, r = 64;
+      const s = w / 150;
+      const cx = w / 2, cy = h / 2 + 6 * s, r = 64 * s;
       ctx.clearRect(0, 0, w, h);
       ctx.fillStyle = "#101317";
       ctx.beginPath();
@@ -1371,7 +1851,7 @@
 
       // green launch band 1500-2500
       ctx.strokeStyle = "rgba(56, 170, 120, 0.85)";
-      ctx.lineWidth = 6;
+      ctx.lineWidth = 6 * s;
       ctx.beginPath();
       ctx.arc(cx, cy, r - 10, rpmToA(1500), rpmToA(2500));
       ctx.stroke();
@@ -1383,8 +1863,8 @@
 
       ctx.strokeStyle = "#e8e2d6";
       ctx.fillStyle = "#e8e2d6";
-      ctx.lineWidth = 2;
-      ctx.font = "bold 10px system-ui, sans-serif";
+      ctx.lineWidth = Math.max(1.2, 2 * s);
+      ctx.font = "bold " + Math.max(8, 10 * s) + "px system-ui, sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       for (let i = 0; i <= 7; i++) {
@@ -1401,7 +1881,7 @@
       }
       const a = rpmToA(state.displayRpm);
       ctx.strokeStyle = "#e8b03a";
-      ctx.lineWidth = 3;
+      ctx.lineWidth = Math.max(2, 3 * s);
       ctx.lineCap = "round";
       ctx.beginPath();
       ctx.moveTo(cx - Math.cos(a) * 10, cy - Math.sin(a) * 10);
@@ -1413,11 +1893,11 @@
       ctx.fill();
 
       ctx.fillStyle = "#f2eee6";
-      ctx.font = "bold 12px system-ui, sans-serif";
-      ctx.fillText(String(Math.round(state.displayRpm)), cx, cy + 16);
+      ctx.font = "bold " + Math.max(9, 12 * s) + "px system-ui, sans-serif";
+      ctx.fillText(String(Math.round(state.displayRpm)), cx, cy + 16 * s);
       ctx.fillStyle = state.running ? "#7dffc0" : (state.stalled ? "#ff8d82" : "#9aa1a8");
-      ctx.font = "bold 8px system-ui, sans-serif";
-      ctx.fillText(state.running ? "RUN" : (state.stalled ? "STALL" : "OFF"), cx, cy + 28);
+      ctx.font = "bold " + Math.max(7, 8 * s) + "px system-ui, sans-serif";
+      ctx.fillText(state.running ? "RUN" : (state.stalled ? "STALL" : "OFF"), cx, cy + 28 * s);
     }
 
     function updateHud() {
